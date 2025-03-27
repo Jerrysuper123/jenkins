@@ -2,7 +2,7 @@
 
 ## what is jenkins file?
 instead of user interface, write the config in a file. it is pipeline as a code
-
+xx
 We place jenkins file in the repository
 
 source: https://www.youtube.com/watch?v=7KCS70sCoK0
