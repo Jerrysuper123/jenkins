@@ -97,5 +97,54 @@ pipeline {
   }
 }
 
+## environment variables in jenkinsfile
+load below the see the list of env var, you can use them in jenkins file
 
+```
+localhost:8080/env-vars.html/
+```
+## you can define your own environment variable
 
+FOR credentials to work, install credential and credential binding plugin in jenkins
+
+```
+pipeline {
+  agent any
+  environment {
+    //usu cal this by extracting from the code
+    NEW_VERSION = '1.3.0'
+    //take id as the credential id/reference
+    //need to install a plug in to use this
+    SERVER_CREDENTIAL = credential('')
+  }
+  stages {
+    stage("build") {
+      steps {
+        echo 'building the application ... '
+        //use double quote when concatenate the string
+        echo "building version ${NEW_VERSION}"
+      }
+    }
+    stage("deploy"){
+      steps {
+        echo "deploy with ${SERVER_CREDENTIAL}"
+        //OR YOU CAN USE withCredentials() wrapper to get the username and pw
+        withCredentials(
+          [usernamepassword(credentials:'server-credentials',usernameVariable: USER, passwordVariable: PWD)]
+        ){
+          //with this block i can use the username and password
+          sh "some script ${USER} ${PWD}"
+        }
+      }
+    }
+  }
+  post {
+    always {
+    }
+    success {}
+    failure {}
+  }
+}
+```
+
+you can define credentials in jenkinsfile then use them in jenkinfiles
