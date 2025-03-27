@@ -148,3 +148,55 @@ pipeline {
 ```
 
 you can define credentials in jenkinsfile then use them in jenkinfiles
+
+## access build tools 'mvn install'
+only gradle, maven and jdk are available in jenkins
+```
+pipeline {
+  tools {
+  //for version, u have to configure the mvn tool, check it out
+    maven 'Maven'
+  }
+
+}
+```
+
+## parameters in jenkins
+```
+pipeline {
+  parameters {
+    //you can define which version to deploy
+    string(name: 'VERSION', defaultValue: '', description: 'version to deploy on pro')
+    choice(name: 'VERSION', choices: ['1.1.0','1.2.0'], description: '')
+    booleanParam(name: 'executeTests", defaultValue: true, description: '')
+  }
+  //then u can use the parameters in any stages
+  //make conditional step based on parameter
+  stages {
+    stage("test"){
+      when {
+        expression {
+          params.executeTests
+        }
+      }
+      steps {
+        echo 'testing the app..."
+      }
+    }
+  }
+}
+```
+
+## use external groovy scripts
+clean up jenkins file and put script in their own file
+
+```
+def gv
+
+script {
+  //u can write groovy
+  //create groovy script
+  gv = load "script.groovy"
+  gv.buildApp()
+}
+```
