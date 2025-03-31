@@ -1,10 +1,11 @@
 //groovy script to check if there are any changes
 // CODE_CHANGES = GetGitChanges()
+def gv
 pipeline {
     // agent runs on any avail agent
     agent any
     parameters {
-        //define which selection to deploy
+        //define which selection to deploy in GUI
         choice(name: 'VERSION', choices: ['1.1.0', '1.2.0', '1.3.0'], description: '')
         booleanParam(name: 'executeTests', defaultValue: true, description: '')
 
@@ -20,16 +21,28 @@ pipeline {
 
     }
     stages {
+        stage("init"){
+            steps {
+                script {
+                    gv = load "script.groovy"
+                }
+            }
+        }
         stage("build"){
             // when {
             //     expression {
             //         BRANCH_NAME == 'dev' || CODE_CHANGES == true
             //     }
             // }
+            // steps {
+            //     echo 'building the application...'
+            //     // Variable in string to be in double quote
+            //     echo "building version ${NEW_VERSION}"
+            // }
             steps {
-                echo 'building the application...'
-                // Variable in string to be in double quote
-                echo "building version ${NEW_VERSION}"
+                script {
+                    gv.buildApp()
+                }
             }
         }
         
