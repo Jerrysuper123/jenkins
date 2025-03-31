@@ -3,6 +3,15 @@
 pipeline {
     // agent runs on any avail agent
     agent any
+    parameters {
+        //define which selection to deploy
+        choice(name: 'VERSION', choices: ['1.1.0', '1.2.0', '1.3.0'], description: '')
+        booleanParam(name: 'executeTests', defaultValue: true, description: '')
+
+    }
+    tools {
+        maven 'Maven'
+    }
     //define your own env, available in all pipeline stages
     environment {
         NEW_VERSION = '1.3.0'
@@ -27,11 +36,18 @@ pipeline {
         stage("test"){
             // conditional when
             when {
+                // expression {
+                //     //env variable env.BRANCH_NAME
+                //     //only exe when it is dev branch
+                //     BRANCH_NAME == 'dev' || BRANCH_NAME == 'master'
+                // }
+                when {
                 expression {
-                    //env variable env.BRANCH_NAME
-                    //only exe when it is dev branch
-                    BRANCH_NAME == 'dev' || BRANCH_NAME == 'master'
+                    params.executeTests
                 }
+            }
+
+
             }
             steps {
                 echo "testing the application..."
