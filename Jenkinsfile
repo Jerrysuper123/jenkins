@@ -61,7 +61,7 @@ pipeline {
                 //we need to provide credential
                 //we will need to define credential in jenkins GUI
                 // echo "deploying with ${SERVER_CREDENTIALS}"
-
+                echo "deploying version ${params.VERSION}"
             }
         }
 
