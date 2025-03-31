@@ -7,7 +7,7 @@ pipeline {
     environment {
         NEW_VERSION = '1.3.0'
         //need to install credentials plugin
-        SERVER_CREDENTIALS = credentials('server-credentials')
+        // SERVER_CREDENTIALS = credentials('server-credentials')
 
     }
     stages {
@@ -44,7 +44,7 @@ pipeline {
                 // deploy new build to dev servers
                 //we need to provide credential
                 //we will need to define credential in jenkins GUI
-                echo "deploying with ${SERVER_CREDENTIALS}"
+                // echo "deploying with ${SERVER_CREDENTIALS}"
 
             }
         }
