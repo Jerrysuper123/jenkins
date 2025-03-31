@@ -41,7 +41,6 @@ pipeline {
                 //     //only exe when it is dev branch
                 //     BRANCH_NAME == 'dev' || BRANCH_NAME == 'master'
                 // }
-                when {
                 expression {
                     params.executeTests
                 }
