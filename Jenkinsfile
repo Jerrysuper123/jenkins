@@ -1,14 +1,38 @@
+//groovy script to check if there are any changes
+// CODE_CHANGES = GetGitChanges()
 pipeline {
     // agent runs on any avail agent
     agent any
+    //define your own env, available in all pipeline stages
+    environment {
+        NEW_VERSION = '1.3.0'
+        //need to install credentials plugin
+        SERVER_CREDENTIALS = credentials('server-credentials')
+
+    }
     stages {
         stage("build"){
+            // when {
+            //     expression {
+            //         BRANCH_NAME == 'dev' || CODE_CHANGES == true
+            //     }
+            // }
             steps {
                 echo 'building the application...'
+                // Variable in string to be in double quote
+                echo "building version ${NEW_VERSION}"
             }
         }
         
         stage("test"){
+            // conditional when
+            when {
+                expression {
+                    //env variable env.BRANCH_NAME
+                    //only exe when it is dev branch
+                    BRANCH_NAME == 'dev' || BRANCH_NAME == 'master'
+                }
+            }
             steps {
                 echo "testing the application..."
             }
@@ -17,8 +41,26 @@ pipeline {
         stage("deploy"){
             steps {
                 echo "deploy the application..."
+                // deploy new build to dev servers
+                //we need to provide credential
+                //we will need to define credential in jenkins GUI
+                echo "deploying with ${server-credentials}"
+                
             }
         }
 
     }
+
+    //post execution logics to do something
+    // post {
+    //     always {
+    //         // always run
+    //     }
+    //     success {
+
+    //     }
+    //     failure {
+
+    //     }
+    // }
 }
