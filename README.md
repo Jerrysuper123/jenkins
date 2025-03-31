@@ -1,6 +1,6 @@
 # jenkins
 
-testing
+testing"te
 
 ## what is jenkins file?
 
@@ -221,5 +221,36 @@ gv.buildApp()
 }
 
 ```
+
+```
+
+## steps to start and stop jenkins
+
+```
+Install the latest LTS version: brew install jenkins-lts
+Start the Jenkins service: brew services start jenkins-lts
+Restart the Jenkins service: brew services restart jenkins-lts
+Update the Jenkins version: brew upgrade jenkins-lts
+
+browse to http://localhost:8080
+```
+
+## if you forget you admin password and is stuck
+
+```
+<!-- remove jenkins from mac -->
+brew uninstall jenkins-lts
+
+<!-- remove all jenkins config and related folder -->
+rm -rf ~/.jenkins
+
+<!-- check and stop all jenkin related services are still running -->
+brew services list
+
+<!-- finally ensure everything is cleaned, remove any jenkins cache -->
+brew cleanup
+
+<!-- reinstall jenkins -->
+brew install jenkins
 
 ```
