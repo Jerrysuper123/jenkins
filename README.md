@@ -1,6 +1,9 @@
 # jenkins
 
+testing
+
 ## what is jenkins file?
+
 instead of user interface, write the config in a file. it is pipeline as a code
 xx
 We place jenkins file in the repository
@@ -8,17 +11,21 @@ We place jenkins file in the repository
 source: https://www.youtube.com/watch?v=7KCS70sCoK0
 
 ## pipeline syntax
+
 can be written in scripted or declarative syntax
 
 scripted syntax
+
 ```
 node {
   groovy script
 }
 ```
+
 groovy is a bit diffcult to start with
 
 so declarative is easier to start with, but not as powerful as scripted syntax
+
 ```
 pipeline {
   agent any
@@ -33,25 +40,29 @@ pipeline {
   post {
     //always do sth, you can send email to colleague
     always {
-      
+
     }
     success {}
     failure {}
   }
 }
 ```
-## 2 step go to jenkins and create a new build 
+
+## 2 step go to jenkins and create a new build
+
 Then u can add a git repo
 credentials (create and use them)
 
 then it scan all branches, and only find jenkins file on dev branch, so it only build on dev branch
 
 ## go into "configuration"
+
 implicitly checking out the code
 
 it will auto spot jenkins file in my source code. and stay on dev branch
 
 ## you can define "post" attributes
+
 do something after all the stages are done, always, success or failure conditions
 
 ## you can also define conditional for each stage
@@ -90,7 +101,7 @@ pipeline {
   }
   post {
     always {
-      
+
     }
     success {}
     failure {}
@@ -101,50 +112,54 @@ pipeline {
 load below the see the list of env var, you can use them in jenkins file
 
 ```
+
 localhost:8080/env-vars.html/
+
 ```
 ## you can define your own environment variable
 
 FOR credentials to work, install credential and credential binding plugin in jenkins
 
 ```
+
 pipeline {
-  agent any
-  environment {
-    //usu cal this by extracting from the code
-    NEW_VERSION = '1.3.0'
-    //take id as the credential id/reference
-    //need to install a plug in to use this
-    SERVER_CREDENTIAL = credential('')
-  }
-  stages {
-    stage("build") {
-      steps {
-        echo 'building the application ... '
-        //use double quote when concatenate the string
-        echo "building version ${NEW_VERSION}"
-      }
-    }
-    stage("deploy"){
-      steps {
-        echo "deploy with ${SERVER_CREDENTIAL}"
-        //OR YOU CAN USE withCredentials() wrapper to get the username and pw
-        withCredentials(
-          [usernamepassword(credentials:'server-credentials',usernameVariable: USER, passwordVariable: PWD)]
-        ){
-          //with this block i can use the username and password
-          sh "some script ${USER} ${PWD}"
-        }
-      }
-    }
-  }
-  post {
-    always {
-    }
-    success {}
-    failure {}
-  }
+agent any
+environment {
+//usu cal this by extracting from the code
+NEW_VERSION = '1.3.0'
+//take id as the credential id/reference
+//need to install a plug in to use this
+SERVER_CREDENTIAL = credential('')
 }
+stages {
+stage("build") {
+steps {
+echo 'building the application ... '
+//use double quote when concatenate the string
+echo "building version ${NEW_VERSION}"
+}
+}
+stage("deploy"){
+steps {
+echo "deploy with ${SERVER_CREDENTIAL}"
+//OR YOU CAN USE withCredentials() wrapper to get the username and pw
+withCredentials(
+[usernamepassword(credentials:'server-credentials',usernameVariable: USER, passwordVariable: PWD)]
+){
+//with this block i can use the username and password
+sh "some script ${USER} ${PWD}"
+}
+}
+}
+}
+post {
+always {
+}
+success {}
+failure {}
+}
+}
+
 ```
 
 you can define credentials in jenkinsfile then use them in jenkinfiles
@@ -152,51 +167,59 @@ you can define credentials in jenkinsfile then use them in jenkinfiles
 ## access build tools 'mvn install'
 only gradle, maven and jdk are available in jenkins
 ```
+
 pipeline {
-  tools {
-  //for version, u have to configure the mvn tool, check it out
-    maven 'Maven'
-  }
+tools {
+//for version, u have to configure the mvn tool, check it out
+maven 'Maven'
+}
 
 }
+
 ```
 
 ## parameters in jenkins
 ```
+
 pipeline {
-  parameters {
-    //you can define which version to deploy
-    string(name: 'VERSION', defaultValue: '', description: 'version to deploy on pro')
-    choice(name: 'VERSION', choices: ['1.1.0','1.2.0'], description: '')
-    booleanParam(name: 'executeTests", defaultValue: true, description: '')
-  }
-  //then u can use the parameters in any stages
-  //make conditional step based on parameter
-  stages {
-    stage("test"){
-      when {
-        expression {
-          params.executeTests
-        }
-      }
-      steps {
-        echo 'testing the app..."
-      }
-    }
-  }
+parameters {
+//you can define which version to deploy
+string(name: 'VERSION', defaultValue: '', description: 'version to deploy on pro')
+choice(name: 'VERSION', choices: ['1.1.0','1.2.0'], description: '')
+booleanParam(name: 'executeTests", defaultValue: true, description: '')
 }
+//then u can use the parameters in any stages
+//make conditional step based on parameter
+stages {
+stage("test"){
+when {
+expression {
+params.executeTests
+}
+}
+steps {
+echo 'testing the app..."
+}
+}
+}
+}
+
 ```
 
 ## use external groovy scripts
 clean up jenkins file and put script in their own file
 
 ```
+
 def gv
 
 script {
-  //u can write groovy
-  //create groovy script
-  gv = load "script.groovy"
-  gv.buildApp()
+//u can write groovy
+//create groovy script
+gv = load "script.groovy"
+gv.buildApp()
 }
+
+```
+
 ```
