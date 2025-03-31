@@ -44,8 +44,8 @@ pipeline {
                 // deploy new build to dev servers
                 //we need to provide credential
                 //we will need to define credential in jenkins GUI
-                echo "deploying with ${server-credentials}"
-                
+                echo "deploying with ${SERVER_CREDENTIALS}"
+
             }
         }
 
